@@ -1,9 +1,8 @@
 {
-    "exclude": ["__tests__", "jest.config.ts"], // it may not be workcheck it out here
     "compilerOptions": {
         "target": "es2016",
         "module": "commonjs",
-        "rootDir": "./src",
+        "rootDir": "./",
         "outDir": "./dist",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
