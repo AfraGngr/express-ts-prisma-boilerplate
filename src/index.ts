@@ -1,8 +1,6 @@
-import express, { Express } from 'express';
+import { app } from './app';
 
-const app: Express = express();
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
     /* eslint-disable */
