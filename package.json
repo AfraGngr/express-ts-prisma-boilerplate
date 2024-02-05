@@ -33,6 +33,7 @@
     },
     "homepage": "https://github.com/AfraGngr/express-ts-prisma-boilerplate#readme",
     "dependencies": {
+        "@prisma/client": "^5.9.1",
         "dotenv": "^16.4.1",
         "express": "^4.18.2"
     },
