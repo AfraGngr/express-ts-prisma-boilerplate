@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-export type TRegisterRequest = z.infer<typeof getUserSchema>;
+export type TUserQuery = z.infer<typeof getAllUserSchema>;
 
-export const getUserSchema = z.object({
+export const getAllUserSchema = z.object({
     name: z.string().optional(),
     email: z.string().optional(),
     numberType: z
