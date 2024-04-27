@@ -6,7 +6,8 @@ export const validateQueryMiddleware = (
 ): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            schema.parse(req.query);
+            const result = schema.parse(req.query);
+            req.query = result;
             next();
         } catch (err: unknown) {
             if (err instanceof z.ZodError) {
