@@ -4,9 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
-        "start": "cross-env NODE_ENV=production node dist/index.js",
-        "test": "cross-env NODE_ENV=test jest",
+        "dev": "dotenv -e .env.development nodemon ./src/index.ts",
+        "start": "dotenv -e .env.production node dist/index.js",
+        "test": "dotenv -e .env.test jest",
         "build": "tsc -p tsconfig.build.json",
         "lint": "eslint ./src/**/*.ts --fix",
         "format": "prettier ./src/**/*.ts --write",
@@ -34,7 +34,7 @@
     "homepage": "https://github.com/AfraGngr/express-ts-prisma-boilerplate#readme",
     "dependencies": {
         "@prisma/client": "^5.9.1",
-        "dotenv": "^16.4.1",
+        "dotenv-cli": "^7.4.1",
         "express": "^4.18.2",
         "http-status": "^1.7.4",
         "zod": "^3.22.4"
@@ -46,8 +46,6 @@
         "@types/supertest": "^6.0.2",
         "@typescript-eslint/eslint-plugin": "^6.20.0",
         "@typescript-eslint/parser": "^6.20.0",
-        "cross-env": "^7.0.3",
-        "dotenv-cli": "^7.3.0",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^9.1.0",
         "husky": "^9.0.10",
