@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Server } from 'http';
 import httpStatus from 'http-status';
 import { Request, Response, NextFunction } from 'express';
 import AppError from '../utils/appError';
@@ -77,44 +76,6 @@ export default class ErrorHandler {
                 this.sendErrorDev(err, res);
             }
         };
-    };
-
-    static initializeUncaughtException = () => {
-        process.on('uncaughtException', (err: Error) => {
-            console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-            console.log(err.name, err.message, err.stack);
-            process.exit(1);
-        });
-    };
-
-    static initializeUnhandledRejection = (server: Server) => {
-        process.on('unhandledRejection', (reason: Error) => {
-            console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-            console.log(reason.name, reason.message, reason.stack);
-            server.close(() => {
-                process.exit(1);
-            });
-        });
-    };
-
-    static initializeSIGTERMlistener = (server: Server) => {
-        process.on('SIGTERM', () => {
-            console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
-            // db.close()
-            server.close(() => {
-                console.log('💥 Process terminated!');
-            });
-        });
-    };
-
-    static initializeSIGINTlistener = (server: Server) => {
-        process.on('SIGINT', () => {
-            console.log('👋 SIGINT RECEIVED. Shutting down gracefully');
-            // db.close()
-            server.close(() => {
-                console.log('💥 Process terminated!');
-            });
-        });
     };
 
     private static sendErrorDev = (err: AppError, res: Response) => {
