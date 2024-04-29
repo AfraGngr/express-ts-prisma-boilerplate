@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import { createCipheriv, createDecipheriv, scryptSync } from 'crypto';
 import AppError from '../utils/appError';
 
-const key = scryptSync(process.env.SESSION_ENCRYPT_SECRET, 'salt', 24);
+const key = scryptSync(process.env.SESSION_ENCRYPT_SECRET!, 'salt', 24);
 const iv = Buffer.alloc(16, 0); // Initialization crypto vector
 
 export interface CookieConfigOptions {
@@ -44,8 +44,8 @@ export class AuthService {
             role: user.role,
         };
 
-        const token = jwt.sign(data, process.env.JWT_SESSION_SECRET, {
-            expiresIn: process.env.JWT_SESSION_EXPIRY,
+        const token = jwt.sign(data, process.env.JWT_SESSION_SECRET!, {
+            expiresIn: process.env.JWT_SESSION_EXPIRY!,
         });
         const session = this.encrypt(token);
         // create a cookie expiry date in compatible w jwt lifetime
@@ -55,7 +55,7 @@ export class AuthService {
                     60 *
                     60 *
                     1000 *
-                    +process.env.JWT_SESSION_EXPIRY.slice(0, -1) +
+                    +process.env.JWT_SESSION_EXPIRY!.slice(0, -1) +
                 1000,
         );
 
@@ -74,7 +74,7 @@ export class AuthService {
     };
 
     private encrypt = (token: string) => {
-        const cipher = createCipheriv(process.env.SESSION_ALGORITHM, key, iv);
+        const cipher = createCipheriv(process.env.SESSION_ALGORITHM!, key, iv);
         let encrypted = cipher.update(token, 'utf8', 'hex');
         encrypted += cipher.final('hex');
         return encrypted;
@@ -83,7 +83,7 @@ export class AuthService {
     private decrypt = (session: string) => {
         try {
             const decipher = createDecipheriv(
-                process.env.SESSION_ALGORITHM,
+                process.env.SESSION_ALGORITHM!,
                 key,
                 iv,
             );
