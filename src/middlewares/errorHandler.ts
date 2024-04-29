@@ -34,7 +34,9 @@ export default class ErrorHandler {
                             httpStatus.INTERNAL_SERVER_ERROR;
                         error.message =
                             error?.response?.data?.message ||
-                            httpStatus[error.statusCode] ||
+                            httpStatus[
+                                error.statusCode as keyof typeof httpStatus
+                            ] ||
                             'Something went wrong';
                         error.isOperational = false;
                         break;
@@ -43,7 +45,10 @@ export default class ErrorHandler {
                             error.statusCode ||
                             httpStatus.INTERNAL_SERVER_ERROR;
                         error.message =
-                            error.message || httpStatus[error.statusCode];
+                            error.message ||
+                            httpStatus[
+                                error.statusCode as keyof typeof httpStatus
+                            ];
                         error.isOperational = false;
                         break;
                 }
