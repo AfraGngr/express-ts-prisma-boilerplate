@@ -5,6 +5,8 @@ import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { createCipheriv, createDecipheriv, scryptSync } from 'crypto';
 import AppError from '../utils/appError';
+import { TLogin } from '../schema/loginSchema';
+import bcrypt from 'bcrypt';
 
 const key = scryptSync(process.env.SESSION_ENCRYPT_SECRET!, 'salt', 24);
 const iv = Buffer.alloc(16, 0); // Initialization crypto vector
@@ -33,6 +35,21 @@ export class AuthService {
         const { session, config } = await this.createSession(req, newUser);
 
         return { session, config };
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public login = async (req: Request, data: TLogin): Promise<CookieData> => {
+        const { email, password } = data;
+        const user = await prisma.user.findUnique({ where: { email } });
+
+        if (!user) throw new AppError(400, 'Yanlış şifre veya email');
+
+        const passwordMatches = bcrypt.compareSync(password, user.password);
+
+        if (!passwordMatches)
+            throw new AppError(400, 'Yanlış şifre veya email');
+
+        return await this.createSession(req, user);
     };
 
     private createSession = async (
