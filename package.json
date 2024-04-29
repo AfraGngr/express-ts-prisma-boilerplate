@@ -18,7 +18,8 @@
         "push:test": "dotenv  -e .env.test npx prisma db push",
         "migrate:prod": "dotenv  -e .env.production npx prisma migrate dev",
         "push:prod": "dotenv  -e .env.production npx prisma db push",
-        "deploy": "dotenv -e .env.production npx prisma migrate deploy"
+        "deploy": "dotenv -e .env.production npx prisma migrate deploy",
+        "seed": "dotenv -e .env.development ts-node seed.ts"
     },
     "repository": {
         "type": "git",

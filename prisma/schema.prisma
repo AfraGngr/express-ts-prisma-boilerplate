@@ -7,18 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int    @id @default(autoincrement())
-  firstName String @map("first_name")
-  lastName  String @map("last_name")
-  email     String @unique
-  password  String
-  role      Role   @default(User)
-
-  @@map("user")
-}
-
 enum Role {
   User
   Admin
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  firstName    String         @map("first_name")
+  lastName     String         @map("last_name")
+  email        String         @unique
+  password     String
+  role         Role           @default(User)
+  borrowedBook BorrowedBook[]
+  BookReview   BookReview[]
+
+  @@map("users")
+}
+
+model Book {
+  id           Int            @id @default(autoincrement())
+  title        String
+  summary      String
+  author       String
+  rating       Decimal?
+  borrowed     Boolean        @default(false)
+  imagePath    String?
+  categoryId   Int
+  category     Category       @relation(fields: [categoryId], references: [id])
+  borrowedBook BorrowedBook[]
+  BookReview   BookReview[]
+
+  @@map("books")
+}
+
+model BorrowedBook {
+  book       Book      @relation(fields: [bookId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  bookId     Int       @map("user_id")
+  userId     Int       @map("book_id")
+  borrowDate DateTime  @map("borrow_date")
+  returnDate DateTime? @map("return_date")
+
+  @@unique([bookId, userId])
+  @@map("borrowed_books")
+}
+
+model BookReview {
+  book   Book    @relation(fields: [bookId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+  bookId Int     @map("user_id")
+  userId Int     @map("book_id")
+  rate   Int
+  review String?
+
+  @@unique([bookId, userId])
+  @@map("book_reviews")
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String
+  books Book[]
+
+  @@map("categories")
 }
