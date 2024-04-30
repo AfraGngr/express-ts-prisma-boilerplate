@@ -1,19 +1,30 @@
-import { User } from '@prisma/client';
+import { BookReview, BorrowedBook } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { TUserFilter } from '../schema/allUsersSchema';
 import AppError from '../utils/appError';
 
-interface IUserData {
+interface IUserDataAdmin {
+    id: number;
     firstName: string;
     lastName: string;
     email: string;
     role: string;
 }
 
+interface IUserData {
+    id: number;
+    firstName: string;
+    lastName: string;
+    BorrowedBook: BorrowedBook[];
+    BookReview: BookReview[];
+}
+
 export class UserService {
     constructor() {}
 
-    public getAllUsers = async (filters: TUserFilter): Promise<IUserData[]> => {
+    public getAllUsers = async (
+        filters: TUserFilter,
+    ): Promise<IUserDataAdmin[]> => {
         const { limit, page } = filters;
 
         // eslint-disable-next-line no-console
@@ -21,6 +32,7 @@ export class UserService {
 
         const data = await prisma.user.findMany({
             select: {
+                id: true,
                 firstName: true,
                 lastName: true,
                 email: true,
@@ -33,13 +45,18 @@ export class UserService {
         return data;
     };
 
-    public getUser = async (userId: number): Promise<User> => {
+    public getUser = async (userId: number): Promise<IUserData> => {
         const data = await prisma.user.findUnique({
             where: {
                 id: userId,
             },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+            },
             include: {
-                borrowedBook: {
+                BorrowedBook: {
                     include: {
                         book: true,
                     },

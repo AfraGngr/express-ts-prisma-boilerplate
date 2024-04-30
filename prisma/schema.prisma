@@ -19,7 +19,7 @@ model User {
   email        String         @unique
   password     String
   role         Role           @default(User)
-  borrowedBook BorrowedBook[]
+  BorrowedBook BorrowedBook[]
   BookReview   BookReview[]
 
   @@map("users")
@@ -35,7 +35,7 @@ model Book {
   imagePath    String?
   categoryId   Int
   category     Category       @relation(fields: [categoryId], references: [id])
-  borrowedBook BorrowedBook[]
+  BorrowedBook BorrowedBook[]
   BookReview   BookReview[]
 
   @@map("books")
