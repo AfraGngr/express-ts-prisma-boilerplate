@@ -1,6 +1,6 @@
 {
     "*.ts": [
-        "bash -c tsc  --noEmit --esModuleInterop --strict --skipLibCheck --typeRoots src/types/*.d.ts",
+        "tsc  --noEmit --esModuleInterop --strict --skipLibCheck --typeRoots src/types/*.d.ts",
         "prettier --write",
         "eslint --fix"
     ],
