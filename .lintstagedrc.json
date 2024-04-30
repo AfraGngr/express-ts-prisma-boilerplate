@@ -1,6 +1,6 @@
 {
     "*.ts": [
-        "tsc --noEmit --esModuleInterop --strict --skipLibCheck",
+        "bash -c tsc  --noEmit --esModuleInterop --strict --skipLibCheck --project tsconfig.json",
         "prettier --write",
         "eslint --fix"
     ],

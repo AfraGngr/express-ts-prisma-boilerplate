@@ -12,6 +12,7 @@
         "format": "prettier ./src/**/*.ts --write",
         "commit": "commit",
         "prepare": "husky install",
+        "type-check": "npx tsc --noEmit --esModuleInterop --strict --skipLibCheck --project tsconfig.json",
         "migrate:dev": "dotenv  -e .env.development npx prisma migrate dev",
         "push:dev": "dotenv  -e .env.development npx prisma db push",
         "migrate:test": "dotenv  -e .env.test npx prisma migrate dev",
