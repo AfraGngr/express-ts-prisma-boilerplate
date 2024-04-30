@@ -92,4 +92,8 @@ export class UserService {
 
         return data;
     };
+
+    public rateBook = (bookId: number) => {
+        bookId;
+    };
 }
