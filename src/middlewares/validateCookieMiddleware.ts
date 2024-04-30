@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { z } from 'zod';
 import AppError from '../utils/appError';
+import { ISessionData } from '../services/authService';
 
 export const validateCookieMiddleware = (
     schema: z.ZodSchema,
@@ -10,8 +11,9 @@ export const validateCookieMiddleware = (
         const cookie = req.cookies[process.env.SESSION_NAME!];
         if (!cookie) throw new AppError(401, 'Unauthorized');
         try {
-            const result = schema.parse(req.cookies);
-            console.log(result);
+            const result = schema.parseAsync(
+                req.cookies,
+            ) as unknown as ISessionData;
             req.userId = result.id;
             req.role = result.role;
             next();
