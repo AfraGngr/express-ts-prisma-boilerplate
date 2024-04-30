@@ -54,8 +54,8 @@ model BorrowedBook {
 }
 
 model BookReview {
-  book   Book    @relation(fields: [bookId], references: [id])
-  user   User    @relation(fields: [userId], references: [id])
+  Book   Book    @relation(fields: [bookId], references: [id])
+  User   User    @relation(fields: [userId], references: [id])
   bookId Int     @map("user_id")
   userId Int     @map("book_id")
   rate   Int
