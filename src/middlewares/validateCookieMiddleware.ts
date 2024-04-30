@@ -11,9 +11,11 @@ export const validateCookieMiddleware = (
         const cookie = req.cookies[process.env.SESSION_NAME!];
         if (!cookie) throw new AppError(401, 'Unauthorized');
         try {
-            const result = schema.parseAsync(
+            const result = (await schema.parseAsync(
                 req.cookies,
-            ) as unknown as ISessionData;
+            )) as unknown as ISessionData;
+
+            console.log({ result });
             req.userId = result.id;
             req.role = result.role;
             next();

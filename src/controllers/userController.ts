@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RequestHandler } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import { UserService } from '../services/userService';
 import catchAsync from '../utils/catchAsync';
 import { TUserFilter } from '../schema/allUsersSchema';
@@ -18,3 +18,10 @@ export const getUser: RequestHandler<TUser> = catchAsync(async (req, res) => {
     const data = await userService.getUser(+req.params.userId);
     res.status(200).send({ status: 'success', data });
 });
+
+export const getProfile: RequestHandler = catchAsync(
+    async (req: Request, res: Response) => {
+        const data = await userService.getProfile(req.userId as number);
+        res.status(200).send({ status: 'success', data });
+    },
+);

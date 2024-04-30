@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { getAllUsers, getUser } from '../controllers/userController';
+import {
+    getAllUsers,
+    getProfile,
+    getUser,
+} from '../controllers/userController';
 import { validateQueryMiddleware } from '../middlewares/validateQueryMiddleware';
 import { allUsersSchema } from '../schema/allUsersSchema';
 import { validateParamMiddleware } from '../middlewares/validateParamMiddleware';
@@ -10,6 +14,7 @@ const router = Router();
 
 router
     .get('/', validateQueryMiddleware(allUsersSchema), isAdmin, getAllUsers)
+    .get('/profile', getProfile)
     .get('/:userId', validateParamMiddleware(userSchema), getUser);
 
 export { router as userRoutes };

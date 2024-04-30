@@ -15,6 +15,7 @@ interface IUserData {
     id: number;
     firstName: string;
     lastName: string;
+    email?: string;
     BorrowedBook: BorrowedBook[];
     BookReview: BookReview[];
 }
@@ -54,8 +55,30 @@ export class UserService {
                 id: true,
                 firstName: true,
                 lastName: true,
+                BorrowedBook: {
+                    include: {
+                        book: true,
+                    },
+                },
+                BookReview: true,
             },
-            include: {
+        });
+
+        if (!data) throw new AppError(400, 'User not found');
+
+        return data;
+    };
+
+    public getProfile = async (userId: number): Promise<IUserData> => {
+        const data = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
                 BorrowedBook: {
                     include: {
                         book: true,
