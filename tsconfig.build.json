@@ -4,5 +4,6 @@
         "rootDir": "./src",
         "outDir": "./dist"
     },
-    "include": ["src", "src/types/environment.d.ts"]
+
+    "include": ["src"]
 }

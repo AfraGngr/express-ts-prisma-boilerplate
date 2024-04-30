@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { TRegister } from '../schema/registerSchema';
 import { Request } from 'express';
@@ -11,16 +11,21 @@ import bcrypt from 'bcrypt';
 const key = scryptSync(process.env.SESSION_ENCRYPT_SECRET!, 'salt', 24);
 const iv = Buffer.alloc(16, 0); // Initialization crypto vector
 
-export interface CookieConfigOptions {
+export interface ICookieConfigOptions {
     expires: Date;
     httpOnly: boolean;
     secure: boolean;
     sameSite: 'lax' | 'strict' | 'none';
 }
 
-export interface CookieData {
+export interface ICookieData {
     session: string | undefined;
-    config: CookieConfigOptions | undefined;
+    config: ICookieConfigOptions | undefined;
+}
+
+export interface ISessionData {
+    id: number;
+    role: Role;
 }
 
 export class AuthService {
@@ -29,7 +34,7 @@ export class AuthService {
     public registerUser = async (
         req: Request,
         data: TRegister,
-    ): Promise<CookieData> => {
+    ): Promise<ICookieData> => {
         const newUser = await prisma.user.create({ data });
 
         const { session, config } = await this.createSession(req, newUser);
@@ -38,7 +43,7 @@ export class AuthService {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public login = async (req: Request, data: TLogin): Promise<CookieData> => {
+    public login = async (req: Request, data: TLogin): Promise<ICookieData> => {
         const { email, password } = data;
         const user = await prisma.user.findUnique({ where: { email } });
 
@@ -52,10 +57,29 @@ export class AuthService {
         return await this.createSession(req, user);
     };
 
+    public checkSession = async (session: string): Promise<ISessionData> => {
+        const token = this.decrypt(session);
+        const decodedToken = jwt.verify(
+            token,
+            process.env.JWT_SESSION_SECRET!,
+        ) as jwt.JwtPayload;
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: decodedToken.id,
+            },
+            select: { id: true, role: true },
+        });
+
+        if (!user) throw new AppError(401, 'User not found!');
+
+        return user;
+    };
+
     private createSession = async (
         req: Request,
         user: User,
-    ): Promise<CookieData> => {
+    ): Promise<ICookieData> => {
         const data = {
             id: user.id,
             role: user.role,
@@ -76,7 +100,7 @@ export class AuthService {
                 1000,
         );
 
-        const config: CookieConfigOptions = {
+        const config: ICookieConfigOptions = {
             expires: expiry,
             httpOnly: true,
             secure:

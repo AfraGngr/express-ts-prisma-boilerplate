@@ -14,7 +14,7 @@ export const register: RequestHandler<any, any, TRegister> = catchAsync(
             req.body,
         );
         res.status(201)
-            .cookie('session', session!, config!)
+            .cookie(process.env.SESSION_NAME!, session!, config!)
             .send({ status: 'success', data: {} });
     },
 );
@@ -22,7 +22,7 @@ export const login: RequestHandler<any, any, TLogin> = catchAsync(
     async (req, res) => {
         const { session, config } = await authService.login(req, req.body);
         res.status(200)
-            .cookie('session', session!, config!)
+            .cookie(process.env.SESSION_NAME!, session!, config!)
             .send({ status: 'success', data: {} });
     },
 );
