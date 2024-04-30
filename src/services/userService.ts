@@ -55,6 +55,7 @@ export class UserService {
                 id: true,
                 firstName: true,
                 lastName: true,
+                email: true,
                 BorrowedBook: {
                     include: {
                         book: true,
