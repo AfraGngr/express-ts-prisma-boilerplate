@@ -1,6 +1,6 @@
-import { BookReview, BorrowedBook } from '@prisma/client';
+import { Book, BookReview, BorrowedBook, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
-import { TUserFilter } from '../schema/allUsersSchema';
+import { TUserFilter } from '../schema/userSchema';
 import AppError from '../utils/appError';
 
 interface IUserDataAdmin {
@@ -93,7 +93,65 @@ export class UserService {
         return data;
     };
 
-    public rateBook = (bookId: number) => {
+    public borrowBook = async (
+        userId: number,
+        bookId: number,
+    ): Promise<Book> => {
+        try {
+            const book = await prisma.book.update({
+                where: { id: bookId },
+                data: {
+                    borrowed: true,
+                    BorrowedBook: {
+                        create: {
+                            userId,
+                            borrowDate: new Date(),
+                        },
+                    },
+                },
+            });
+
+            return book;
+        } catch (err) {
+            if (err instanceof Prisma.PrismaClientKnownRequestError) {
+                if (
+                    err.message.includes(
+                        'An operation failed because it depends on one or more records that were required but not found',
+                    )
+                )
+                    throw new AppError(400, 'The Book cannot be found');
+
+                if (
+                    err.code === 'P2002' &&
+                    err.meta &&
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
+                    err.meta.target.includes('user_id') &&
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
+                    err.meta.target.includes('book_id')
+                ) {
+                    throw new AppError(
+                        400,
+                        "You've already borrowed this book",
+                    );
+                }
+            }
+            throw err;
+        }
+
+        // eslint-disable-next-line no-console
+    };
+
+    public returnBook = async (userId: number, bookId: number) => {
+        // When user returns book, book table 'borrowed' column will be updated
+        bookId;
+        userId;
+    };
+
+    public rateBook = async (userId: number, bookId: number) => {
+        // When user rates book, book table's rating column will be update
+        // Just user who borrows the book can rate
         bookId;
     };
 }

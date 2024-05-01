@@ -14,8 +14,6 @@ export const validateCookieMiddleware = (
             const result = (await schema.parseAsync(
                 req.cookies,
             )) as unknown as ISessionData;
-
-            console.log({ result });
             req.userId = result.id;
             req.role = result.role;
             next();

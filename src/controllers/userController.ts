@@ -2,8 +2,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import { UserService } from '../services/userService';
 import catchAsync from '../utils/catchAsync';
-import { TUserFilter } from '../schema/allUsersSchema';
-import { TUser } from '../schema/userSchema';
+import { TUser, TUserFilter } from '../schema/userSchema';
 
 const userService = new UserService();
 
@@ -22,6 +21,30 @@ export const getUser: RequestHandler<TUser> = catchAsync(async (req, res) => {
 export const getProfile: RequestHandler = catchAsync(
     async (req: Request, res: Response) => {
         const data = await userService.getProfile(req.userId as number);
+        res.status(200).send({ status: 'success', data });
+    },
+);
+export const borrowBook: RequestHandler = catchAsync(
+    async (req: Request, res: Response) => {
+        const data = await userService.borrowBook(req.userId!, +req.params.bookId);
+        res.status(200).send({ status: 'success', data});
+    },
+);
+export const returnBook: RequestHandler = catchAsync(
+    async (req: Request, res: Response) => {
+        const data = await userService.returnBook(
+            req.userId!,
+            +req.params.bookId,
+        );
+        res.status(200).send({ status: 'success', data });
+    },
+);
+export const rateBook: RequestHandler = catchAsync(
+    async (req: Request, res: Response) => {
+        const data = await userService.rateBook(
+            req.userId!,
+            +req.params.bookId,
+        );
         res.status(200).send({ status: 'success', data });
     },
 );
