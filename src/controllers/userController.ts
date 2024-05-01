@@ -26,8 +26,11 @@ export const getProfile: RequestHandler = catchAsync(
 );
 export const borrowBook: RequestHandler = catchAsync(
     async (req: Request, res: Response) => {
-        const data = await userService.borrowBook(req.userId!, +req.params.bookId);
-        res.status(200).send({ status: 'success', data});
+        const data = await userService.borrowBook(
+            req.userId!,
+            +req.params.bookId,
+        );
+        res.status(200).send({ status: 'success', data });
     },
 );
 export const returnBook: RequestHandler = catchAsync(

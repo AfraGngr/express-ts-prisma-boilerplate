@@ -44,8 +44,8 @@ model Book {
 model BorrowedBook {
   book       Book      @relation(fields: [bookId], references: [id])
   user       User      @relation(fields: [userId], references: [id])
-  bookId     Int       @map("user_id")
-  userId     Int       @map("book_id")
+  bookId     Int       @map("book_id")
+  userId     Int       @map("user_id")
   borrowDate DateTime  @map("borrow_date")
   returnDate DateTime? @map("return_date")
 
