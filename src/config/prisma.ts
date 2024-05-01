@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 export const prisma = new PrismaClient({
-    errorFormat: 'pretty'
+    errorFormat: 'pretty',
 }).$extends({
     query: {
         user: {

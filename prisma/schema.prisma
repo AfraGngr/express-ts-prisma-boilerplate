@@ -56,8 +56,8 @@ model BorrowedBook {
 model BookReview {
   Book   Book    @relation(fields: [bookId], references: [id])
   User   User    @relation(fields: [userId], references: [id])
-  bookId Int     @map("user_id")
-  userId Int     @map("book_id")
+  bookId Int     @map("book_id")
+  userId Int     @map("user_id")
   rate   Int
   review String?
 
