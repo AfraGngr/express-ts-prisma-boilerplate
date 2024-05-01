@@ -10,6 +10,7 @@ import { bookRoutes } from './routes/bookRoutes';
 export const app: Express = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
 
 app.use('/auth', authRoutes);

@@ -3,6 +3,7 @@
 import httpStatus from 'http-status';
 import { Request, Response, NextFunction } from 'express';
 import AppError from '../utils/appError';
+import { Prisma } from '@prisma/client';
 
 export default class ErrorHandler {
     static convert = () => {
@@ -13,6 +14,11 @@ export default class ErrorHandler {
             next: NextFunction,
         ) => {
             let error = err;
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                if (error.code === 'P2003')
+                    error.message = `Foreign key constraint failed on the field: ${error.meta?.field_name} `;
+            }
+
             if (!(error instanceof AppError)) {
                 switch (error.name) {
                     case 'JsonWebTokenError':

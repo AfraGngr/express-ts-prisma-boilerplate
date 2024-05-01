@@ -12,20 +12,28 @@ import {
     allBooksSchema,
     bookSchema,
     createBookSchema,
+    updateBookSchema,
 } from '../schema/bookSchema';
 import { validateBodyMiddleware } from '../middlewares/validateBodyMiddleware';
+import { isAdmin } from '../middlewares/isAdmin';
 
 const router = Router();
 
 router.get('/', validateQueryMiddleware(allBooksSchema), getAllBooks);
-router.post('/',  validateBodyMiddleware(createBookSchema), createBook);
+router.post('/', isAdmin, validateBodyMiddleware(createBookSchema), createBook);
 router.get('/:bookId', validateParamMiddleware(bookSchema), getBook);
 router.patch(
     '/:bookId',
+    isAdmin,
     validateParamMiddleware(bookSchema),
-    validateBodyMiddleware(createBookSchema),
+    validateBodyMiddleware(updateBookSchema),
     updateBook,
 );
-router.delete('/:bookId', validateParamMiddleware(bookSchema), deleteBook);
+router.delete(
+    '/:bookId',
+    isAdmin,
+    validateParamMiddleware(bookSchema),
+    deleteBook,
+);
 
 export { router as bookRoutes };

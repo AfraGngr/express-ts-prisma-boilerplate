@@ -3,6 +3,7 @@ import { z } from 'zod';
 export type TBook = z.infer<typeof bookSchema>;
 export type TBookFilter = z.infer<typeof allBooksSchema>;
 export type TCreateBook = z.infer<typeof createBookSchema>;
+export type TUpdateBook = z.infer<typeof updateBookSchema>;
 
 export const allBooksSchema = z
     .object({
@@ -32,4 +33,14 @@ export const createBookSchema = z.object({
     summary: z.string(),
     author: z.string(),
     categoryId: z.string().transform((arg) => Number(arg)),
+});
+
+export const updateBookSchema = z.object({
+    title: z.string().optional(),
+    summary: z.string().optional(),
+    author: z.string().optional(),
+    categoryId: z
+        .string()
+        .optional()
+        .transform((arg) => arg && Number(arg)),
 });

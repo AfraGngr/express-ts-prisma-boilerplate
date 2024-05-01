@@ -6,8 +6,7 @@ export const validateParamMiddleware = (
 ): RequestHandler => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const result = schema.parse(req.params);
-            req.params = result;
+            schema.parse(req.params);
             next();
         } catch (err: unknown) {
             if (err instanceof z.ZodError) {
